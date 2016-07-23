@@ -1,0 +1,33 @@
+{
+  "name": "universal-redux-starter",
+  "version": "0.0.1",
+  "description": "Minimal starter for using universal-redux npm package",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bdefore/universal-redux-starter.git"
+  },
+  "scripts": {
+    "build": "universal-redux-build",
+    "start": "NODE_ENV=production NODE_PATH=./src ./src/server/server.js",
+    "dev-server": "NODE_PATH=./src ./src/server/server.js",
+    "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run dev-server\"",
+    "watch-client": "universal-redux-watch"
+  },
+  "author": {
+    "name": "Buck DeFore"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^2.4.1",
+    "immutable": "^3.8.1",
+    "universal-redux": "4.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "2.2.0",
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0",
+    "react-redux": "4.4.5",
+    "react-router": "2.5.2",
+    "react-router-redux": "3.0.0"
+  }
+}

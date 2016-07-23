@@ -1,0 +1,22 @@
+{
+  "presets": [
+    "es2015",
+    "stage-0",
+    "react"
+  ],
+  "plugins": [
+    [ "transform-runtime" ],
+    [ "typecheck" ],
+    [ "transform-decorators-legacy" ],
+    [ "transform-es2015-classes", {"loose": true} ],
+    [ "transform-class-properties" ]
+  ],
+  "env": {
+    "development": {
+      "plugins": []
+    },
+    "production": {
+      "plugins": []
+    }
+  }
+}
