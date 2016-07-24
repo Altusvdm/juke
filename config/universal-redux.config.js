@@ -15,7 +15,7 @@ module.exports = {
      //
      // Expects: String
      */
-    host: process.env.HOST || 'localhost',
+    host: process.env.HOST || '192.168.0.4',
 
     /*
      // The port to run Express universal renderer will run on. See src/server.js.

@@ -1,4 +1,4 @@
-import Firebase from 'firebase';
+import firebase from 'firebase';
 import { updateData } from 'redux/modules/firebase';
 
 let _firebase = undefined;
@@ -13,23 +13,40 @@ export function setupFirebase(store) {
   return _firebase;
 }
 
+export function setIframe(session, iframe) {
+  _firebase.setIframe(session, iframe);
+}
+
+export function setPlayingState(session, playingState) {
+  _firebase.setPlayingState(session, playingState);
+}
+
 class FirebaseManager {
   constructor(store) {
     this.store = store;
-    this.baseUrl = __FIREBASE_URL__;
+    this.app = firebase.initializeApp({
+      apiKey: 'AIzaSyDm2aXRHmxqHS2lVmX7B7VIZ08IdlSpDKQ',
+      authDomain: 'deezer-test.firebaseapp.com',
+      databaseURL: 'https://deezer-test.firebaseio.com'
+    });
     this.registerFirebase();
   }
 
   registerFirebase() {
-    console.log('registerFirebase', this.baseUrl);
-    this.firebaseRef = new Firebase(`${this.baseUrl}`);
-    this.registerEvent(this.firebaseRef, (dataSnapshot) => {
-      console.log('got me data', dataSnapshot.val());
+    this.app.database().ref('sessions').on('value', (dataSnapshot) => {
       this.store.dispatch(updateData(dataSnapshot.val()));
     });
   }
 
-  registerEvent(ref, updateCallback) {
-    ref.on('value', updateCallback).bind(this);
+  setIframe(session, iframe) {
+    this.app.database().ref(`sessions/${session}`).set({'iframe': iframe, 'playing': false}, (error) => {
+      console.log(error);
+    });
+  }
+
+  setPlayingState(session, playingState) {
+    this.app.database().ref(`sessions/${session}/playing`).set(playingState, (error) => {
+      console.log(error);
+    });
   }
 }

@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { setIframe, setPlayingState } from 'libs/firebase';
+import { Map } from 'immutable';
+import $ from 'jquery';
+
+const SESSION = 'altus';
 
 class App extends Component {
   constructor(props) {
@@ -8,35 +13,64 @@ class App extends Component {
     this.state = {};
   }
 
+  firebaseSession() {
+    if (!__SERVER__) {
+      console.log(this.props.firebase);
+      return this.props.firebase.get(SESSION) || Map({});
+    }
+
+    return Map({});
+  }
+
   startStream() {
-    this.setState({
-      stream: `<iframe scrolling="no" frameborder="0" allowTransparency="true" src="https://www.deezer.com/plugins/player?format=classic&autoplay=true&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id=2057516484&app_id=1" width="700" height="350"></iframe>`
-    });
+    setIframe(SESSION, `<iframe scrolling="no" frameborder="0" allowTransparency="true" src="https://www.deezer.com/plugins/player?format=classic&autoplay=true&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id=2057516484&app_id=1" width="700" height="350"></iframe>`);
   }
 
   stopStream() {
-    this.setState({
-      stream: null
-    });
+    setIframe(SESSION, '');
   }
 
   getIframe() {
-    if (this.state.stream) {
-      return <div dangerouslySetInnerHTML={{__html: this.state.stream}}/>;
+    if (this.firebaseSession().get('playing') === true) {
+      return <div dangerouslySetInnerHTML={{__html: this.firebaseSession().get('iframe')}}/>;
     }
   }
 
+  setPlaying(playingState) {
+    setPlayingState(SESSION, playingState);
+  }
+
+  search(string, type) {
+    $.ajax({
+      url: `http://api.deezer.com/search/${type}?q=${string}`,
+      success: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
   render() {
-    console.log(this.props);
     return (<div>
       <div>Deezer test</div>
-      <button onClick={this.startStream.bind(this)}>Start Stream</button>
-      <button onClick={this.stopStream.bind(this)}>Stop Stream</button>
+      <div>
+        <button onClick={this.startStream.bind(this)}>Set Stream</button>
+        <button onClick={this.stopStream.bind(this)}>Remove Stream</button>
+      </div>
+      <div>
+        <button onClick={() => { this.setPlaying(true); }}>Start Playing</button>
+        <button onClick={() => { this.setPlaying(false); }}>Stop Playing</button>
+      </div>
+
+      <div>
+        Album:
+        <input onChange={(event) => { this.setState({album: event.target.value})}} value={this.state.album}/>
+        <button onClick={() => { this.search(this.state.album, 'album')}}>Search</button>
+      </div>
       { this.getIframe() }
     </div>);
   }
 }
 
 export default connect((state) => ({
-  firebase: state.firebase
+  firebase: state.firebase || Map({})
 }))(App);

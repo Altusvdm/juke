@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build": "universal-redux-build",
-    "start": "NODE_ENV=production NODE_PATH=./src ./src/server/server.js",
-    "dev-server": "NODE_PATH=./src ./src/server/server.js",
+    "start": "cross-env NODE_ENV=production NODE_PATH=./src ./src/server/server.js",
+    "dev-server": "cross-env NODE_PATH=./src ./src/server/server.js",
     "dev": "concurrently --kill-others \"npm run watch-client\" \"npm run dev-server\"",
     "watch-client": "universal-redux-watch"
   },
@@ -18,8 +18,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "firebase": "^2.4.1",
+    "firebase": "^3.2.0",
     "immutable": "^3.8.1",
+    "jquery": "^3.1.0",
     "universal-redux": "4.0.2"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "react-dom": "^15.2.0",
     "react-redux": "4.4.5",
     "react-router": "2.5.2",
-    "react-router-redux": "3.0.0"
+    "react-router-redux": "3.0.0",
+    "cross-env": "^1.0.7"
   }
 }
